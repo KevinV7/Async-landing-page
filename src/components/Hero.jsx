@@ -1,6 +1,40 @@
+import { useState } from 'react'
 import Button from './ui/Button'
 import Badge from './ui/Badge'
 import { profile } from '../data/portfolio'
+
+/*
+ * Retrato dentro de un frame neobrutalista. Si la foto (profile.photo)
+ * no existe todavía, cae al avatar emoji sin romper el layout.
+ */
+function Portrait() {
+  const [photoMissing, setPhotoMissing] = useState(false)
+
+  if (photoMissing || !profile.photo) {
+    return (
+      <div
+        role="img"
+        aria-label={`Avatar de ${profile.name}, desarrollador de software`}
+        className="flex size-56 items-center justify-center rounded-brutal border-[3px] border-black bg-acid text-8xl shadow-brutal-lg sm:size-72"
+      >
+        <span aria-hidden="true">👨‍💻</span>
+      </div>
+    )
+  }
+
+  return (
+    <div className="rounded-brutal border-[3px] border-black bg-acid p-2 shadow-brutal-lg">
+      <img
+        src={profile.photo}
+        alt={`Retrato de ${profile.name}, desarrollador de software`}
+        width="288"
+        height="360"
+        className="aspect-[4/5] w-56 rounded-lg border-[3px] border-black object-cover object-top sm:w-72"
+        onError={() => setPhotoMissing(true)}
+      />
+    </div>
+  )
+}
 
 export default function Hero() {
   return (
@@ -45,13 +79,7 @@ export default function Hero() {
       </div>
 
       <div className="justify-self-center md:justify-self-end">
-        <div
-          role="img"
-          aria-label="Avatar de Kevin V., desarrollador de software"
-          className="flex size-56 items-center justify-center rounded-brutal border-[3px] border-black bg-acid text-8xl shadow-brutal-lg sm:size-72"
-        >
-          <span aria-hidden="true">👨‍💻</span>
-        </div>
+        <Portrait />
       </div>
     </section>
   )

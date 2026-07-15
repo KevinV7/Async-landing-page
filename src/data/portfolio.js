@@ -3,6 +3,7 @@ export const profile = {
   role: 'Software Developer',
   tagline: 'Construyo productos web rápidos, accesibles y con carácter.',
   email: 'codekvcode@outlook.com',
+  photo: '/foto.jpg', // colocar la foto en public/foto.jpg
   github: 'https://github.com/kevinv7',
   linkedin: 'https://www.linkedin.com/',
   cv: '/cv.pdf',
