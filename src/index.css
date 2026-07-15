@@ -1,0 +1,55 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-cream: #fdf6e3;
+  --color-acid: #ffd93d;
+  --color-punch: #ff6b9d;
+  --color-splash: #4ecdc4;
+  --color-focus: #0066ff;
+
+  --font-display: 'Space Grotesk', 'Arial Black', sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+
+  --shadow-brutal: 4px 4px 0 0 #000;
+  --shadow-brutal-lg: 6px 6px 0 0 #000;
+  --shadow-brutal-none: 0 0 0 0 #000;
+
+  --radius-brutal: 10px;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-cream font-body text-black antialiased;
+  }
+
+  /* Indicador de foco propio, distinto del borde decorativo negro */
+  :focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+    }
+
+    /* Desactiva el efecto "press" de botones y el desplazamiento de cards */
+    .press-effect:active,
+    .lift-on-hover:hover {
+      transform: none !important;
+      box-shadow: var(--shadow-brutal) !important;
+    }
+  }
+}
