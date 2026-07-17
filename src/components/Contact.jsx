@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import emailjs from '@emailjs/browser'
 import Button from './ui/Button'
 import Card from './ui/Card'
@@ -13,9 +13,20 @@ const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID
 const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
 const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
 
+const MAX_LENGTHS = { name: 100, email: 254, message: 2000 }
+const MIN_RESEND_INTERVAL_MS = 30_000
+
+// EmailJS forwards these as opaque template variables, never as raw email
+// headers, but we still strip line breaks so a crafted value can't be used
+// to smuggle extra header-like content into whatever the template renders.
+function sanitizeField(value, maxLength) {
+  return value.replace(/[\r\n]+/g, ' ').trim().slice(0, maxLength)
+}
+
 export default function Contact() {
-  const [form, setForm] = useState({ name: '', email: '', message: '' })
-  const [status, setStatus] = useState('idle') // idle | sending | success | error
+  const [form, setForm] = useState({ name: '', email: '', message: '', company: '' })
+  const [status, setStatus] = useState('idle') // idle | sending | success | error | cooldown
+  const lastSentAtRef = useRef(0)
 
   function handleChange(event) {
     const { name, value } = event.target
@@ -24,6 +35,20 @@ export default function Contact() {
 
   async function handleSubmit(event) {
     event.preventDefault()
+
+    // Honeypot: real visitors never fill this hidden field, bots usually do.
+    if (form.company) {
+      setStatus('success')
+      setForm({ name: '', email: '', message: '', company: '' })
+      return
+    }
+
+    const sinceLastSend = Date.now() - lastSentAtRef.current
+    if (sinceLastSend < MIN_RESEND_INTERVAL_MS) {
+      setStatus('cooldown')
+      return
+    }
+
     setStatus('sending')
 
     try {
@@ -31,15 +56,15 @@ export default function Contact() {
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
         {
-          from_name: form.name,
-          from_email: form.email,
-          message: form.message,
-          to_email: profile.email,
+          from_name: sanitizeField(form.name, MAX_LENGTHS.name),
+          from_email: sanitizeField(form.email, MAX_LENGTHS.email),
+          message: sanitizeField(form.message, MAX_LENGTHS.message),
         },
         { publicKey: EMAILJS_PUBLIC_KEY }
       )
+      lastSentAtRef.current = Date.now()
       setStatus('success')
-      setForm({ name: '', email: '', message: '' })
+      setForm({ name: '', email: '', message: '', company: '' })
     } catch (error) {
       console.error('Error al enviar el mensaje:', error)
       setStatus('error')
@@ -65,6 +90,18 @@ export default function Contact() {
       <div className="mt-10 grid gap-10 md:grid-cols-[3fr_2fr]">
         <Card variant="white" className="p-6 sm:p-8">
           <form onSubmit={handleSubmit} className="grid gap-5">
+            <div className="absolute left-[-9999px]" aria-hidden="true">
+              <label htmlFor="company">No llenar este campo</label>
+              <input
+                id="company"
+                name="company"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                value={form.company}
+                onChange={handleChange}
+              />
+            </div>
             <div>
               <label htmlFor="nombre" className="mb-2 block font-bold">
                 Nombre
@@ -74,6 +111,7 @@ export default function Contact() {
                 name="name"
                 type="text"
                 required
+                maxLength={MAX_LENGTHS.name}
                 autoComplete="name"
                 placeholder="Tu nombre"
                 value={form.name}
@@ -90,6 +128,7 @@ export default function Contact() {
                 name="email"
                 type="email"
                 required
+                maxLength={MAX_LENGTHS.email}
                 autoComplete="email"
                 placeholder="tu@email.com"
                 value={form.email}
@@ -106,6 +145,7 @@ export default function Contact() {
                 name="message"
                 required
                 rows={5}
+                maxLength={MAX_LENGTHS.message}
                 placeholder="¿En qué puedo ayudarte?"
                 value={form.message}
                 onChange={handleChange}
@@ -129,6 +169,11 @@ export default function Contact() {
             {status === 'error' && (
               <p role="alert" className="font-bold text-red-700 dark:text-red-400">
                 No se pudo enviar. Intenta de nuevo o escríbeme a {profile.email}.
+              </p>
+            )}
+            {status === 'cooldown' && (
+              <p role="alert" className="font-bold text-red-700 dark:text-red-400">
+                Ya enviaste un mensaje hace poco. Espera unos segundos antes de volver a intentarlo.
               </p>
             )}
           </form>
