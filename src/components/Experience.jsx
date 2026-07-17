@@ -1,6 +1,9 @@
 import { experience } from '../data/portfolio'
+import { useLanguage, pick } from '../hooks/useLanguage'
 
 export default function Experience() {
+  const { language, t } = useLanguage()
+
   return (
     <section
       id="experiencia"
@@ -12,23 +15,23 @@ export default function Experience() {
           id="experiencia-titulo"
           className="font-display text-4xl font-bold sm:text-5xl"
         >
-          Experiencia
+          {t('experience.heading')}
         </h2>
 
         <ol className="mt-10 max-w-3xl">
           {experience.map((job) => (
             <li
-              key={job.period}
+              key={job.company}
               className="border-b-[3px] border-black py-6 first:pt-0 last:border-b-0 last:pb-0 dark:border-cream/30"
             >
-              <p className="font-mono text-sm font-semibold">{job.period}</p>
+              <p className="font-mono text-sm font-semibold">{pick(job.period, language)}</p>
               <h3 className="mt-1 font-display text-2xl font-bold">
-                {job.role}{' '}
+                {pick(job.role, language)}{' '}
                 <span className="font-body text-lg font-semibold">
                   · {job.company}
                 </span>
               </h3>
-              <p className="mt-2 leading-relaxed">{job.summary}</p>
+              <p className="mt-2 leading-relaxed">{pick(job.summary, language)}</p>
             </li>
           ))}
         </ol>

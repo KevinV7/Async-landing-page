@@ -1,6 +1,7 @@
 import Card from './ui/Card'
 import Badge from './ui/Badge'
 import { projects } from '../data/portfolio'
+import { useLanguage, pick } from '../hooks/useLanguage'
 
 const mockupColors = {
   yellow: 'bg-acid',
@@ -28,6 +29,8 @@ function BrowserMockup({ color, title, emoji }) {
 }
 
 export default function Projects() {
+  const { language, t } = useLanguage()
+
   return (
     <section
       id="proyectos"
@@ -38,66 +41,64 @@ export default function Projects() {
         id="proyectos-titulo"
         className="font-display text-4xl font-bold sm:text-5xl"
       >
-        Proyectos
+        {t('projects.heading')}
       </h2>
-      <p className="mt-3 max-w-lg text-lg">
-        Una selección de cosas que he construido últimamente.
-      </p>
+      <p className="mt-3 max-w-lg text-lg">{t('projects.subheading')}</p>
 
       <ul className="mt-10 grid gap-8 sm:grid-cols-2 lg:mt-6 lg:grid-cols-3 lg:gap-6">
-        {projects.map((project) => (
-          <li key={project.title}>
-            <Card as="article" interactive className="flex h-full flex-col">
-              <BrowserMockup
-                color={project.color}
-                title={project.title}
-                emoji={project.emoji}
-              />
-              <div className="flex grow flex-col p-5 lg:p-4">
-                <h3 className="line-clamp-2 min-h-[3.75rem] font-display text-xl font-bold lg:min-h-[3.5rem]">
-                  {project.title}
-                </h3>
-                <p className="mt-2 line-clamp-2 min-h-[2.5rem] text-sm leading-relaxed lg:mt-1.5">
-                  {project.description}
-                </p>
-                <ul className="mt-4 flex flex-wrap gap-2 lg:mt-3">
-                  {project.tags.map((tag) => (
-                    <li key={tag}>
-                      <Badge variant="white" size="sm">
-                        {tag}
-                      </Badge>
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-auto flex gap-3 pt-5 lg:pt-3">
-                  {project.repo && (
-                    <a
-                      href={project.repo}
-                      className="font-bold underline underline-offset-4"
-                    >
-                      Repo ↗
-                      <span className="sr-only"> de {project.title}</span>
-                    </a>
-                  )}
-                  {project.demo && (
-                    <a
-                      href={project.demo}
-                      className="font-bold underline underline-offset-4"
-                    >
-                      Ver sitio ↗
-                      <span className="sr-only"> de {project.title}</span>
-                    </a>
-                  )}
-                  {!project.repo && !project.demo && (
-                    <span className="text-sm text-neutral-600 dark:text-neutral-400">
-                      Proyecto privado de cliente
-                    </span>
-                  )}
+        {projects.map((project) => {
+          const title = pick(project.title, language)
+          const description = pick(project.description, language)
+          return (
+            <li key={project.id}>
+              <Card as="article" interactive className="flex h-full flex-col">
+                <BrowserMockup color={project.color} title={title} emoji={project.emoji} />
+                <div className="flex grow flex-col p-5 lg:p-4">
+                  <h3 className="line-clamp-2 min-h-[3.75rem] font-display text-xl font-bold lg:min-h-[3.5rem]">
+                    {title}
+                  </h3>
+                  <p className="mt-2 line-clamp-2 min-h-[2.5rem] text-sm leading-relaxed lg:mt-1.5">
+                    {description}
+                  </p>
+                  <ul className="mt-4 flex flex-wrap gap-2 lg:mt-3">
+                    {project.tags.map((tag) => (
+                      <li key={tag}>
+                        <Badge variant="white" size="sm">
+                          {tag}
+                        </Badge>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-auto flex gap-3 pt-5 lg:pt-3">
+                    {project.repo && (
+                      <a
+                        href={project.repo}
+                        className="font-bold underline underline-offset-4"
+                      >
+                        {t('projects.repoLink')}
+                        <span className="sr-only">{t('projects.srLinkSuffix', title)}</span>
+                      </a>
+                    )}
+                    {project.demo && (
+                      <a
+                        href={project.demo}
+                        className="font-bold underline underline-offset-4"
+                      >
+                        {t('projects.demoLink')}
+                        <span className="sr-only">{t('projects.srLinkSuffix', title)}</span>
+                      </a>
+                    )}
+                    {!project.repo && !project.demo && (
+                      <span className="text-sm text-neutral-600 dark:text-neutral-400">
+                        {t('projects.privateProject')}
+                      </span>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </Card>
-          </li>
-        ))}
+              </Card>
+            </li>
+          )
+        })}
       </ul>
     </section>
   )

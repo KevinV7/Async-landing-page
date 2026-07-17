@@ -1,5 +1,6 @@
 import { FiSun, FiMoon } from 'react-icons/fi'
 import { useTheme } from '../../hooks/useTheme'
+import { useLanguage } from '../../hooks/useLanguage'
 
 /**
  * Interruptor de tema claro/oscuro. Sol y luna hacen crossfade + rotación al
@@ -7,14 +8,15 @@ import { useTheme } from '../../hooks/useTheme'
  */
 export default function ThemeToggle() {
   const { isDark, toggleTheme } = useTheme()
+  const { t } = useLanguage()
 
   return (
     <button
       type="button"
       onClick={toggleTheme}
       aria-pressed={isDark}
-      aria-label={isDark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'}
-      title={isDark ? 'Tema claro' : 'Tema oscuro'}
+      aria-label={isDark ? t('themeToggle.lightAria') : t('themeToggle.darkAria')}
+      title={isDark ? t('themeToggle.lightTitle') : t('themeToggle.darkTitle')}
       className="press-effect relative inline-flex size-10 shrink-0 items-center justify-center rounded-full border-[3px] border-black bg-white shadow-brutal transition-[transform,box-shadow] duration-100 active:translate-x-0.5 active:translate-y-0.5 active:shadow-brutal-none dark:border-cream dark:bg-surface"
     >
       <span className="relative block size-5 overflow-hidden">

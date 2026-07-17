@@ -1,27 +1,30 @@
 import { useState } from 'react'
 import ThemeToggle from './ui/ThemeToggle'
+import { useLanguage } from '../hooks/useLanguage'
 
-const links = [
-  { href: '#stack', label: 'Stack' },
-  { href: '#proyectos', label: 'Proyectos' },
-  { href: '#experiencia', label: 'Experiencia' },
-  { href: '#contacto', label: 'Contacto' },
+const linkDefs = [
+  { href: '#stack', key: 'stack' },
+  { href: '#proyectos', key: 'projects' },
+  { href: '#experiencia', key: 'experience' },
+  { href: '#contacto', key: 'contact' },
 ]
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
+  const { t } = useLanguage()
+  const links = linkDefs.map((link) => ({ ...link, label: t(`nav.${link.key}`) }))
 
   return (
     <header className="sticky top-0 z-50 border-b-[3px] border-black bg-cream transition-colors duration-300 dark:border-cream dark:bg-ink">
       <nav
-        aria-label="Navegación principal"
+        aria-label={t('nav.ariaLabel')}
         className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6"
       >
         <a
           href="#inicio"
           className="rounded-lg border-[3px] border-black bg-acid px-3 py-1 font-display text-lg font-bold text-black shadow-[3px_3px_0_0_var(--shadow-ink)]"
         >
-          Inicio
+          {t('nav.home')}
         </a>
 
         <ul className="hidden items-center gap-6 sm:flex">
@@ -47,7 +50,7 @@ export default function Navbar() {
             aria-controls="menu-movil"
             onClick={() => setOpen((prev) => !prev)}
           >
-            {open ? 'Cerrar' : 'Menú'}
+            {open ? t('nav.menuClose') : t('nav.menuOpen')}
           </button>
         </div>
       </nav>

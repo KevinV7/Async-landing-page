@@ -5,9 +5,10 @@ import Card from './ui/Card'
 import Badge from './ui/Badge'
 import { TikTokIcon, LinkedInIcon, GitHubIcon } from './ui/Icons'
 import { profile } from '../data/portfolio'
+import { useLanguage } from '../hooks/useLanguage'
 
 const inputClasses =
-  'w-full rounded-brutal border-[3px] border-black bg-white px-4 py-3 text-black shadow-brutal placeholder:text-neutral-600 dark:border-cream dark:bg-surface dark:text-cream dark:placeholder:text-neutral-400'
+  'w-full rounded-brutal border-[3px] border-black bg-white px-4 py-2.5 text-black shadow-brutal placeholder:text-neutral-600 dark:border-cream dark:bg-surface dark:text-cream dark:placeholder:text-neutral-400'
 
 const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID
 const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
@@ -24,6 +25,7 @@ function sanitizeField(value, maxLength) {
 }
 
 export default function Contact() {
+  const { t } = useLanguage()
   const [form, setForm] = useState({ name: '', email: '', message: '', company: '' })
   const [status, setStatus] = useState('idle') // idle | sending | success | error | cooldown
   const lastSentAtRef = useRef(0)
@@ -75,23 +77,23 @@ export default function Contact() {
     <section
       id="contacto"
       aria-labelledby="contacto-titulo"
-      className="mx-auto max-w-6xl px-4 py-9 sm:px-6 md:py-7"
+      className="mx-auto max-w-6xl px-4 py-7 sm:px-6 md:py-6"
     >
       <h2
         id="contacto-titulo"
         className="font-display text-4xl font-bold sm:text-5xl"
       >
-        ¿Listo para tu proyecto?
+        {t('contact.heading')}
       </h2>
-      <p className="mt-5 max-w-lg text-lg align:10">
-          Cuéntame qué necesitas y te respondo en menos de 24 horas.
+      <p className="mt-3 max-w-lg text-lg">
+          {t('contact.subheading')}
       </p>
 
-      <div className="mt-10 grid gap-10 md:grid-cols-[3fr_2fr]">
-        <Card variant="white" className="p-6 sm:p-8">
-          <form onSubmit={handleSubmit} className="grid gap-5">
+      <div className="mt-6 grid gap-6 md:grid-cols-[3fr_2fr] md:gap-8">
+        <Card variant="white" className="p-5 sm:p-6">
+          <form onSubmit={handleSubmit} className="grid gap-4">
             <div className="absolute left-[-9999px]" aria-hidden="true">
-              <label htmlFor="company">No llenar este campo</label>
+              <label htmlFor="company">{t('contact.honeypotLabel')}</label>
               <input
                 id="company"
                 name="company"
@@ -103,8 +105,8 @@ export default function Contact() {
               />
             </div>
             <div>
-              <label htmlFor="nombre" className="mb-2 block font-bold">
-                Nombre
+              <label htmlFor="nombre" className="mb-1 block font-bold">
+                {t('contact.nameLabel')}
               </label>
               <input
                 id="nombre"
@@ -113,15 +115,15 @@ export default function Contact() {
                 required
                 maxLength={MAX_LENGTHS.name}
                 autoComplete="name"
-                placeholder="Tu nombre"
+                placeholder={t('contact.namePlaceholder')}
                 value={form.name}
                 onChange={handleChange}
                 className={inputClasses}
               />
             </div>
             <div>
-              <label htmlFor="email" className="mb-2 block font-bold">
-                Email
+              <label htmlFor="email" className="mb-1 block font-bold">
+                {t('contact.emailLabel')}
               </label>
               <input
                 id="email"
@@ -130,23 +132,23 @@ export default function Contact() {
                 required
                 maxLength={MAX_LENGTHS.email}
                 autoComplete="email"
-                placeholder="tu@email.com"
+                placeholder={t('contact.emailPlaceholder')}
                 value={form.email}
                 onChange={handleChange}
                 className={inputClasses}
               />
             </div>
             <div>
-              <label htmlFor="mensaje" className="mb-2 block font-bold">
-                Mensaje
+              <label htmlFor="mensaje" className="mb-1 block font-bold">
+                {t('contact.messageLabel')}
               </label>
               <textarea
                 id="mensaje"
                 name="message"
                 required
-                rows={5}
+                rows={4}
                 maxLength={MAX_LENGTHS.message}
-                placeholder="¿En qué puedo ayudarte?"
+                placeholder={t('contact.messagePlaceholder')}
                 value={form.message}
                 onChange={handleChange}
                 className={`${inputClasses} resize-y`}
@@ -159,29 +161,29 @@ export default function Contact() {
               className="justify-self-start disabled:cursor-not-allowed disabled:opacity-60"
               disabled={status === 'sending'}
             >
-              {status === 'sending' ? 'Enviando...' : 'Enviar mensaje ✉️'}
+              {status === 'sending' ? t('contact.sending') : t('contact.sendButton')}
             </Button>
             {status === 'success' && (
               <p role="status" className="font-bold text-green-700 dark:text-green-400">
-                ¡Mensaje enviado! Te responderé pronto.
+                {t('contact.success')}
               </p>
             )}
             {status === 'error' && (
               <p role="alert" className="font-bold text-red-700 dark:text-red-400">
-                No se pudo enviar. Intenta de nuevo o escríbeme a {profile.email}.
+                {t('contact.error', profile.email)}
               </p>
             )}
             {status === 'cooldown' && (
               <p role="alert" className="font-bold text-red-700 dark:text-red-400">
-                Ya enviaste un mensaje hace poco. Espera unos segundos antes de volver a intentarlo.
+                {t('contact.cooldown')}
               </p>
             )}
           </form>
         </Card>
 
-        <Card variant="yellow" className="h-fit p-6 sm:p-8">
+        <Card variant="yellow" className="h-fit p-5 sm:p-6">
           <h3 className="font-display text-2xl font-bold text-black">
-            También me encuentras en
+            {t('contact.alsoFindMe')}
           </h3>
           <div className="mt-6 flex flex-col items-start gap-4">
             <Badge href={profile.github} variant="white">
