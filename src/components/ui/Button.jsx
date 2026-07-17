@@ -2,7 +2,7 @@ const variants = {
   yellow: 'bg-acid',
   pink: 'bg-punch',
   cyan: 'bg-splash',
-  white: 'bg-white',
+  white: 'bg-white dark:border-cream dark:bg-surface dark:text-cream',
 }
 
 const sizes = {

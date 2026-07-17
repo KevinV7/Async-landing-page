@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Portafolio de Kevin V. — Software Developer. Proyectos, stack técnico y contacto."
+      content="Portafolio de Kevin Valladares. — Software Developer. Proyectos, stack técnico y contacto."
     />
     <title>Kevin V. — Software Developer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -14,6 +14,14 @@
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
+    <script>
+      (function () {
+        try {
+          var isDark = localStorage.getItem('theme') === 'dark';
+          document.documentElement.classList.toggle('dark', isDark);
+        } catch (error) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

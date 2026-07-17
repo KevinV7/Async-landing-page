@@ -2,11 +2,11 @@ const variants = {
   yellow: 'bg-acid',
   pink: 'bg-punch',
   cyan: 'bg-splash',
-  white: 'bg-white',
+  white: 'bg-white dark:border-cream dark:bg-surface dark:text-cream',
 }
 
 const sizes = {
-  sm: 'px-2.5 py-1 text-xs border-2 shadow-[2px_2px_0_0_#000]',
+  sm: 'px-2.5 py-1 text-xs border-2 shadow-brutal-sm',
   md: 'px-4 py-2 text-sm border-2 shadow-brutal',
 }
 

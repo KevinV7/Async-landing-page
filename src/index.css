@@ -1,20 +1,40 @@
 @import 'tailwindcss';
 
+/* Habilita el variant `dark:` controlado por la clase .dark en <html> */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-cream: #fdf6e3;
   --color-acid: #ffd93d;
-  --color-punch: #ff6b9d;
+  --color-punch: #ff8c42;
   --color-splash: #4ecdc4;
   --color-focus: #0066ff;
+
+  /* Paleta modo oscuro: fondo de página y superficie "clara" invertida */
+  --color-ink: #121214;
+  --color-surface: #1c1c1f;
 
   --font-display: 'Space Grotesk', 'Arial Black', sans-serif;
   --font-body: 'Inter', system-ui, sans-serif;
 
-  --shadow-brutal: 4px 4px 0 0 #000;
-  --shadow-brutal-lg: 6px 6px 0 0 #000;
-  --shadow-brutal-none: 0 0 0 0 #000;
+  /*
+   * El color de sombra vive en --shadow-ink (redefinida más abajo bajo .dark),
+   * así shadow-brutal* se invierte en todo el sitio sin tocar cada componente.
+   */
+  --shadow-brutal: 4px 4px 0 0 var(--shadow-ink);
+  --shadow-brutal-lg: 6px 6px 0 0 var(--shadow-ink);
+  --shadow-brutal-sm: 2px 2px 0 0 var(--shadow-ink);
+  --shadow-brutal-none: 0 0 0 0 var(--shadow-ink);
 
   --radius-brutal: 10px;
+}
+
+:root {
+  --shadow-ink: #000;
+}
+
+.dark {
+  --shadow-ink: var(--color-cream);
 }
 
 @layer base {
@@ -23,7 +43,26 @@
   }
 
   body {
-    @apply bg-cream font-body text-black antialiased;
+    @apply bg-cream font-body text-black antialiased transition-colors duration-300 dark:bg-ink dark:text-cream;
+  }
+
+  /* Deja aire entre el navbar sticky y el título de la sección al saltar por ancla */
+  section[id] {
+    scroll-margin-top: 5rem;
+  }
+
+  @keyframes float-bounce {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+
+  .float-bounce {
+    animation: float-bounce 2.4s ease-in-out infinite;
   }
 
   /* Indicador de foco propio, distinto del borde decorativo negro */

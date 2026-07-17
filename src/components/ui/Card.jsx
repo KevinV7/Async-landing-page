@@ -1,5 +1,5 @@
 const variants = {
-  white: 'bg-white',
+  white: 'bg-white dark:border-cream dark:bg-surface',
   yellow: 'bg-acid',
   pink: 'bg-punch',
   cyan: 'bg-splash',
