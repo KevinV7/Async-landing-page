@@ -28,8 +28,9 @@ export default function Hero() {
     <section
       id="inicio"
       aria-labelledby="hero-titulo"
-      className="relative mx-auto grid min-h-[calc(100dvh-4.5rem)] max-w-6xl items-center gap-10 overflow-hidden px-4 py-6 sm:px-6 md:grid-cols-[3fr_2fr] md:py-6"
+      className="relative mx-auto grid min-h-[calc(100dvh-4.5rem)] max-w-6xl items-center gap-10 overflow-hidden px-4 py-10 sm:px-6 md:grid-cols-[3fr_2fr] md:py-6"
     >
+      {/* Retrato solo en desktop: en móvil el hero es texto centrado, sin foto */}
       <div className="pointer-events-none absolute inset-0 -z-10 hidden md:block">
         <div className="absolute inset-0 bg-black [clip-path:polygon(64%_100%,100%_100%,100%_0%,44%_0%)]" />
         <img
@@ -40,17 +41,23 @@ export default function Hero() {
         />
       </div>
 
-      <div className="relative z-20 min-w-0">
-        <div className="mb-4 flex items-center justify-center gap-3 sm:justify-between md:mb-3">
+      {/*
+       * Ritmo vertical único (gap) en lugar de márgenes por elemento: en móvil
+       * todo va centrado y hasta `md` no se pasa a la columna alineada a la
+       * izquierda que convive con el retrato de fondo.
+       */}
+      <div className="relative z-20 flex min-w-0 flex-col items-center gap-5 text-center md:items-start md:gap-4 md:text-left">
+        <div className="flex w-full items-center justify-center gap-3 md:justify-between">
           <p className="block w-fit rounded-lg border-[3px] border-black bg-splash px-3 py-1 font-display font-bold text-black shadow-brutal">
             {t('hero.greeting')}
           </p>
           <LanguageToggle />
         </div>
+
         <h1
           id="hero-titulo"
           aria-label={profile.name}
-          className="mb-4 text-center font-display text-4xl font-bold leading-none sm:text-left sm:text-6xl lg:text-7xl md:mb-0"
+          className="font-display text-[clamp(2rem,9vw,2.5rem)] font-bold leading-tight sm:text-6xl md:leading-none lg:text-7xl"
         >
           <span aria-hidden="true">
             {typedFirstName}
@@ -63,20 +70,22 @@ export default function Hero() {
             <span className="opacity-0">{untypedLastName}</span>
           </span>
         </h1>
-        <p className="mb-6 mt-2 text-center font-display text-2xl font-bold text-black sm:text-left sm:text-3xl md:mb-0">
-          <span className="bg-punch text-black box-decoration-clone px-2">
+
+        <p className="font-display text-2xl font-bold text-black sm:text-3xl">
+          <span className="box-decoration-clone bg-punch px-2 text-black">
             {pick(profile.role, language)}
           </span>
         </p>
-        <p className="mb-6 mt-2 max-w-lg text-lg leading-snug text-center sm:text-left md:mb-0">
+
+        <p className="max-w-[34ch] text-lg leading-snug md:max-w-lg">
           {pick(profile.tagline, language)}
         </p>
 
-        <div className="mt-4 flex flex-col items-center gap-6 sm:items-start md:gap-4">
-          <Button href="#proyectos" variant="yellow" size="lg" >
+        <div className="mt-1 flex flex-col items-center gap-4 md:items-start">
+          <Button href="#proyectos" variant="yellow" size="lg">
             {t('hero.ctaProjects')}
           </Button>
-          <div className="flex flex-wrap items-center justify-center gap-4 sm:justify-start">
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:justify-start">
             <Badge href={profile.cv} download="Kevin_Valladares_CV.docx" variant="white">
               {t('hero.cv')}
             </Badge>
@@ -87,16 +96,6 @@ export default function Hero() {
               {t('hero.email')}
             </Badge>
           </div>
-        </div>
-      </div>
-
-      <div className="justify-self-center md:hidden">
-        <div className="flex w-48 aspect-[2/3] items-center justify-center rounded-brutal border-[-1px] sm:w-72">
-          <img
-            src="/avatar.avif"
-            alt={t('hero.photoAlt', profile.name)}
-            className="w-44 aspect-[2/3] rounded-brutal border-[1px] border-black object-cover sm:w-64"
-          />
         </div>
       </div>
     </section>
