@@ -1,5 +1,6 @@
 import Card from './ui/Card'
 import Badge from './ui/Badge'
+import { externalLinkProps, isExternalHref } from './ui/externalLink'
 import { projects } from '../data/portfolio'
 import { useLanguage, pick } from '../hooks/useLanguage'
 
@@ -74,18 +75,26 @@ export default function Projects() {
                       <a
                         href={project.repo}
                         className="font-bold underline underline-offset-4"
+                        {...externalLinkProps(project.repo)}
                       >
                         {t('projects.repoLink')}
-                        <span className="sr-only">{t('projects.srLinkSuffix', title)}</span>
+                        <span className="sr-only">
+                          {t('projects.srLinkSuffix', title)}
+                          {isExternalHref(project.repo) && t('common.newTab')}
+                        </span>
                       </a>
                     )}
                     {project.demo && (
                       <a
                         href={project.demo}
                         className="font-bold underline underline-offset-4"
+                        {...externalLinkProps(project.demo)}
                       >
                         {t('projects.demoLink')}
-                        <span className="sr-only">{t('projects.srLinkSuffix', title)}</span>
+                        <span className="sr-only">
+                          {t('projects.srLinkSuffix', title)}
+                          {isExternalHref(project.demo) && t('common.newTab')}
+                        </span>
                       </a>
                     )}
                     {!project.repo && !project.demo && (

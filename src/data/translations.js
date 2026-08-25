@@ -1,5 +1,8 @@
 export const translations = {
   es: {
+    common: {
+      newTab: ' (se abre en una pestaña nueva)',
+    },
     nav: {
       home: 'Inicio',
       stack: 'Stack',
@@ -61,6 +64,9 @@ export const translations = {
     },
   },
   en: {
+    common: {
+      newTab: ' (opens in a new tab)',
+    },
     nav: {
       home: 'Home',
       stack: 'Tech Stack',

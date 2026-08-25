@@ -1,3 +1,6 @@
+import { useLanguage } from '../../hooks/useLanguage'
+import { externalLinkProps, isExternalHref } from './externalLink'
+
 const variants = {
   yellow: 'bg-acid',
   pink: 'bg-punch',
@@ -12,7 +15,8 @@ const sizes = {
 
 /**
  * Badge/chip neobrutalista con borde negro y sombra dura propia.
- * Con `href` se convierte en enlace (p. ej. GitHub / LinkedIn / CV).
+ * Con `href` se convierte en enlace (p. ej. GitHub / LinkedIn / CV); si
+ * apunta a otro sitio se abre en una pestaña nueva (ver `externalLink`).
  */
 export default function Badge({
   variant = 'white',
@@ -22,6 +26,7 @@ export default function Badge({
   children,
   ...props
 }) {
+  const { t } = useLanguage()
   const Tag = href ? 'a' : 'span'
   const classes = [
     'inline-flex items-center gap-2 rounded-lg border-black',
@@ -36,8 +41,9 @@ export default function Badge({
     .join(' ')
 
   return (
-    <Tag href={href} className={classes} {...props}>
+    <Tag href={href} className={classes} {...externalLinkProps(href)} {...props}>
       {children}
+      {isExternalHref(href) && <span className="sr-only">{t('common.newTab')}</span>}
     </Tag>
   )
 }

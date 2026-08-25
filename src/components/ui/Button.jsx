@@ -1,3 +1,6 @@
+import { useLanguage } from '../../hooks/useLanguage'
+import { externalLinkProps, isExternalHref } from './externalLink'
+
 const variants = {
   yellow: 'bg-acid',
   pink: 'bg-punch',
@@ -12,7 +15,8 @@ const sizes = {
 
 /**
  * Botón neobrutalista: borde negro grueso, sombra dura y efecto
- * "se hunde en su sombra" al pulsar. Con `href` se renderiza como enlace.
+ * "se hunde en su sombra" al pulsar. Con `href` se renderiza como enlace, y
+ * si apunta a otro sitio se abre en una pestaña nueva (ver `externalLink`).
  */
 export default function Button({
   variant = 'yellow',
@@ -22,6 +26,7 @@ export default function Button({
   children,
   ...props
 }) {
+  const { t } = useLanguage()
   const Tag = href ? 'a' : 'button'
   const classes = [
     'press-effect inline-flex items-center justify-center gap-2',
@@ -35,8 +40,9 @@ export default function Button({
   ].join(' ')
 
   return (
-    <Tag href={href} className={classes} {...props}>
+    <Tag href={href} className={classes} {...externalLinkProps(href)} {...props}>
       {children}
+      {isExternalHref(href) && <span className="sr-only">{t('common.newTab')}</span>}
     </Tag>
   )
 }
