@@ -1,6 +1,5 @@
 import Button from './ui/Button'
 import Badge from './ui/Badge'
-import LanguageToggle from './ui/LanguageToggle'
 import { LinkedInIcon } from './ui/Icons'
 import { profile } from '../data/portfolio'
 import { useTypewriter } from '../hooks/useTypewriter'
@@ -47,12 +46,9 @@ export default function Hero() {
        * izquierda que convive con el retrato de fondo.
        */}
       <div className="relative z-20 flex min-w-0 flex-col items-center gap-5 text-center md:items-start md:gap-4 md:text-left">
-        <div className="flex w-full items-center justify-center gap-3 md:justify-between">
-          <p className="block w-fit rounded-lg border-[3px] border-black bg-splash px-3 py-1 font-display font-bold text-black shadow-brutal">
-            {t('hero.greeting')}
-          </p>
-          <LanguageToggle />
-        </div>
+        <p className="block w-fit rounded-lg border-[3px] border-black bg-splash px-3 py-1 font-display font-bold text-black shadow-brutal">
+          {t('hero.greeting')}
+        </p>
 
         <h1
           id="hero-titulo"
