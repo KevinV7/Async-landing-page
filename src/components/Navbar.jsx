@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import ThemeToggle from './ui/ThemeToggle'
+import LanguageToggle from './ui/LanguageToggle'
 import { useLanguage } from '../hooks/useLanguage'
 
 const linkDefs = [
@@ -40,7 +41,8 @@ export default function Navbar() {
           ))}
         </ul>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <LanguageToggle />
           <ThemeToggle />
 
           <button
